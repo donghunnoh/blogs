@@ -82,7 +82,7 @@ affiliations:
 # ---------- Links shown as buttons ----------
 links:
   - label: "Paper (arXiv)"
-    url: "https://arxiv.org/abs/2502.01567"
+    url: "https://arxiv.org/pdf/2502.01567"
     icon: "file-alt"
   # - label: "Paper (PDF)"
   #   url: "https://arxiv.org/pdf/2505.07859v1" 
@@ -95,7 +95,7 @@ links:
     icon: "code"
 
 # ---------- Optional SEO / social ----------
-canonical: "https://arxiv.org/abs/2502.01567"
+canonical: "https://arxiv.org/pdf/2502.01567"
 # hero_image: "arc_example.png"  # Replace with an appropriate image from the paper
 
 # ---------- Footer ----------
