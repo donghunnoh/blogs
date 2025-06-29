@@ -1,175 +1,180 @@
 ---
 # ---------- Core metadata ----------
-title:  "Product of Experts with LLMs:"
-subtitle: "Boosting Performance on ARC is a Matter of Perspective"
+title:  "Latent Thought Models:"
+subtitle: "Language models with explicit latent thought vectors and variational Bayes inference-time computation"
 description: >
-  This work presents a method that significantly improves performance on the Abstraction and Reasoning Corpus (ARC) by leveraging task-specific data augmentations, depth-first search algorithms, and large language models (LLMs) as both generators and scorers.
+  We propose Latent Thought Models (LTMs) that add explicit "latent thought vectors" as internal abstract representations. Before generating text, LTMs first develop those internal thoughts, then use them to guide word-by-word generation. The model learns through a dual-rate process: fast learning that adapts thoughts for specific text and slow learning of general linguistic patterns. Compared to LLMs, LTMs achieve much better sample and computational efficiency. LTMs demonstrate in-context learning at a significantly smaller scale. Most importantly, LTMs introduce "inference-time computation" as a new scaling axis beyond LLMs, potentially transforming how we build efficient and generalizable AI systems.
 keywords:
-  - ARC
-  - Abstract Reasoning
-  - Large Language Models
-  - Data Augmentation
-  - Depth-First Search
-  - Product of Experts
+  - Inference-time computation
+  - Language models
+  - Variational Bayes
+  - Latent variable model
 
 # ---------- Authorship ----------
-author-meta: "Daniel Franzen, Jan Disselhoff, David Hartmann"
+author-meta: "Deqian Kong"
 authors:
-  - name: "Daniel Franzen"
+  - name: "Deqian Kong"
     affiliations:
       - 1
-      - ' *'
-    url: "https://www.linkedin.com/in/daniel-franzen-9609b7334/"
-  - name: "Jan Disselhoff"
-    affiliations:
-      - 1
-      - ' *'
-    url: "https://www.linkedin.com/in/jan-disselhoff-1423a2240/"
-  - name: "David Hartmann"
-    affiliations:
       - 2
       - ' *'
-    url: "https://www.linkedin.com/in/david-hartmann-aa0334274/"
+    url: "https://sites.google.com/view/deqiankong/"
+  - name: "Minglu Zhao"
+    affiliations:
+      - 1
+      - ' *'
+    url: "https://mingluzhao.github.io"
+  - name: "Dehong Xu"
+    affiliations:
+      - 1
+      - ' *'
+    url: "https://dehongxu.github.io"
+  - name: "Bo Pang"
+    affiliations:
+      - 3
+    url: "https://bpucla.github.io"
+  - name: "Shu Wang"
+    affiliations:
+      - 1
+    url: "https://scholar.google.com/citations?user=uPk5l1EAAAAJ&hl=en"
+  - name: "Edouardo Honig"
+    affiliations:
+      - 1
+    url: "http://www.stat.ucla.edu/~edouardohonig/"
+  - name: "Zhangzhang Si"
+    affiliations:
+      - 4
+    url: "https://www.kungfu.ai/person/zz-si"
+  - name: "Chuan Li"
+    affiliations:
+      - 2
+    url: "https://scholar.google.com/citations?user=hoZesOwAAAAJ&hl=en"
+  - name: "Jianwen Xie"
+    affiliations:
+      - 2
+      - ' **'
+    url: "http://www.stat.ucla.edu/~jxie/"
+  - name: "Sirui Xie"
+    affiliations:
+      - 1
+      - ' **'
+    url: "https://siruixie.com"
+  - name: "Ying Nian Wu"
+    affiliations:
+      - 1
+      - ' **'
+    url: "http://www.stat.ucla.edu/~ywu/research.html"
 affiliations:
   - id: 1
-    name: "JGU Mainz"
-    url: "https://www.linkedin.com/in/david-hartmann-aa0334274/"
+    name: "UCLA"
   - id: 2
     name: "Lambda, Inc."
+  - id: 3
+    name: "Salesforce Research"
+  - id: 4
+    name: "KUNGFU.AI"
   - id: ' *'
-    name: "“The ARChitects” Kaggle team members"
+    name: "Equal Contribution"
+  - id: ' **'
+    name: "Equal Advising"
 
 
 # ---------- Links shown as buttons ----------
 links:
-  - label: "Paper (HTML)"
-    url: "https://arxiv.org/html/2505.07859v1"
+  - label: "Paper (arXiv)"
+    url: "https://arxiv.org/abs/2502.01567"
     icon: "file-alt"
-  - label: "Paper (PDF)"
-    url: "https://arxiv.org/pdf/2505.07859v1" 
-    icon: "file-pdf"
-  - label: "OpenReview"
-    url: "https://openreview.net/forum?id=dsBjxI6l8W"
-    icon: "comments"
+  # - label: "Paper (PDF)"
+  #   url: "https://arxiv.org/pdf/2505.07859v1" 
+  #   icon: "file-pdf"
+  # - label: "OpenReview"
+  #   url: "https://openreview.net/forum?id=dsBjxI6l8W"
+  #   icon: "comments"
   - label: "Code (GitHub)"
-    url: "https://github.com/da-fr/Product-of-Experts-ARC-Paper"
+    url: 
     icon: "code"
-  - label: "Model"
-    url: "https://huggingface.co/da-fr/Mistral-NeMo-Minitron-8B-ARChitects-ReArc1200-bnb-4bit"
-    icon: ""
-    emoji: "🤗"
-  - label: "ARC Kaggle Competition 2024"
-    url: "https://www.kaggle.com/competitions/arc-prize-2024/leaderboard"
-    icon: "trophy"
 
 # ---------- Optional SEO / social ----------
-canonical: "https://arxiv.org/abs/2505.07859"
-hero_image: "arc_example.png"  # Replace with an appropriate image from the paper
+canonical: "https://arxiv.org/abs/2502.01567"
+# hero_image: "arc_example.png"  # Replace with an appropriate image from the paper
 
 # ---------- Footer ----------
-owner:  "Daniel Franzen, Jan Disselhoff, David Hartmann"
+owner:  "Deqian Kong"
 year:   2025
 license: "CC BY-SA 4.0"
 license_url: "https://creativecommons.org/licenses/by-sa/4.0/"
 ---
 
 <div class="text-center -mt-20 text-gray-600">
-  Jump to: [TL;DR](#tldr), [Introduction](#introduction), [Method](#method), [Key Insights](#key-insights), [Conclusion](#conclusion), [Acknowledgements](#acknowledgements), [Related Links](#related-links), [Cite](#bibtex)
+  Jump to: [TL;DR](#tldr), [Introduction](#introduction), [Key Findings](#key-findings), [Conclusion](#conclusion), [Acknowledgements](#acknowledgements), [Related Links](#related-links), [Cite](#bibtex)
 </div>
 
 
 
 ## TL;DR {#tldr}
-We boost performance on the ARC reasoning benchmark by using the same LLM in two ways: (1) generating diverse solutions with depth-first search and (2) combine the same model' scores of solutions from different perspectives using an "[Product of Expert (Hinton, 1999)](https://www.cs.toronto.edu/~fritz/absps/icann-99.html)" approach. Our method solves 71.6% of tasks at very low cost (~2ct/task).
+We introduce Latent Thought Models (LTMs), a novel class of language models that incorporate explicit **latent thought vectors** following a prior model in latent space. LTMs use a dual-rate optimization process within the variational Bayes framework: fast inference-time computation for latent vectors and slow learning of decoder parameters. This approach achieves superior sample and parameter efficiency compared to autoregressive models and introduces **inference-time computation** as a new scaling dimension beyond traditional LLMs.
 
-
-<div class="mt-10">
-![High-Level Overview of our Approach: We use a single LLM to generate multiple candidate solutions and utilize multiple perspectives to improve the uncertainty of choosing which solution is best.](images/ARC_Example.png)  
+<div class="mt-10" style="max-width: 700px; margin: 0 auto;">
+  <img 
+    src="images/model.png" 
+    alt="High-Level Overview: LTMs first develop internal latent thoughts, then use them to guide autoregressive text generation through a Transformer decoder." 
+    style="width: 70%; height: auto; display: block; margin: 0 auto;"
+  />
+  <p style="margin-top: 8px; font-size: 14px; color: #555; text-align: left;">
+    High-Level Overview: LTMs first develop internal latent thoughts vectors 𝑧, then use them to guide autoregressive text generation 𝑥 through a Transformer decoder.
+  </p>
 </div>
-
 
 ## Introduction
-The Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI) represents a particularly challenging benchmark in AI research. Unlike traditional ML challenges that reward crystallized knowledge, ARC-AGI focuses on fluid intelligence-the ability to reason about novel problems without specific prior training. Introduced by [François Chollet in 2019](https://arxiv.org/abs/1911.01547), the benchmark explicitly measures general reasoning capabilities, making it a critical test for progress toward AGI.
+Current language models scale primarily through increasing parameters and training data, leaving inference-time computation largely unexplored. We introduce Latent Thought Models (LTMs) that incorporate explicit "thinking" before generation (or speaking).
 
-### Why ARC-AGI Represents a Key AGI Benchmark
+**Key Inspirations**: 
 
-ARC-AGI tests fluid intelligence rather than task-specific skills, making it a necessary benchmark for AGI evaluation:
+(1) **Declarative vs. Procedural Memory**: Latent vectors parallel declarative/episodic memory with fast learning, while global decoder parameters mirror procedural memory with slow learning; 
 
-* Evaluates abstract reasoning and adaptability to novel problems
-* Serves as a necessary (but not sufficient) condition for AGI capabilities
-* A systematic test to measure the reasoning gap between human and artificial intelligence
-* Remains challenging for conventional deep learning approaches
+(2) **Complementary Learning Systems: Fast and Slow**: Our dual-rate learning mirrors the hippocampus (rapid learning of specific experiences) and neocortex (slower learning of general knowledge). 
 
-The "AGI" designation indicates that systems unable to solve these tasks clearly fall short of general intelligence, rather than implying that success demonstrates full AGI capabilities.
+(3) **Language of Thought**: Latent vectors serve as "words" in an internal cognitive language—a "mentalese" that underlies our ability to learn and use natural languages, realizing a computational "think before speak" paradigm.
 
-## Method
+**Why This Matters**: LTMs unlock inference-time computation as a new scaling dimension—the process of finding better internal representations (posterior distributions of latent thought vectors). Just as humans can achieve better understanding by "thinking harder" about a problem, LTMs can use more inference-time computation to achieve better performance with significantly less training data and computation.
 
-Our approach comprises several key components:
+## Key Findings {#key-findings}
 
-1. **Task-Specific Data Augmentations**: We apply data augmentations tailored to the unique characteristics of ARC tasks during training, generation, and scoring phases to enhance model robustness.
-  ![](images/ScoringExample.png)
-2. **Depth-First Search Algorithm**: A depth-first search (DFS) algorithm is employed on LLM predictions to generate a diverse set of high-probability candidate solutions.
-  ![](images/dfs.gif)
-3. **LLM as Generator and Scorer**: The same LLM is utilized both to generate candidate solutions and to score them, using output probabilities to select the most promising solutions.
-  ![](images/candidates.gif)
-4. **Product of Experts (PoE)**: We implement a PoE approach to combine multiple model outputs, refining the selection of candidate solutions.
-  ![](images/rotate.gif)
+Our empirical studies reveal several important discoveries about LTMs' unique scaling properties and capabilities:
 
+1. **Scaling Behaviors of Inference-Time Computation**
+LTMs demonstrate a new scaling dimension beyond traditional model parameters. Performance consistently improves with more inference steps, as the model iteratively refines latent thought vectors to find better internal representations.
 
-## Key Insights
-Large language models (LLMs) demonstrate surprisingly strong capabilities in solving ARC tasks end-to-end, effectively uncovering complex underlying patterns. Critically, we found that these models excel more at evaluating potential solutions than at generating them directly. Leveraging this insight, we employed a depth-first search to efficiently explore possible solutions and then used the same LLM to reliably identify the most promising candidate.
-
-Specifically, our key findings include:
-
-1. **Enhanced Performance through Data Variation**
-    - Applying transformations such as rotation, grid transposition, and color substitution significantly boosts LLM performance.
-    - Providing multiple perspectives on tasks helps overcome inherent limitations, like the autoregressive generation process of LLMs.
-2. **Efficient Solution Candidate Generation**
-    - Standard greedy and stochastic sampling methods were unreliable in generating the correct solution, even with adjusted parameters.
-    - Employing a depth-first search guided by the LLM's evaluation of potential paths greatly improved the chance of finding the correct solution.
-3. **Effective Solution Selection**
-    - Ensemble scoring across diverse augmentations yields more consistent and reliable evaluations.
-    - Our "Product-of-Experts" method for combining the scores of different augmentations emerged as a powerful and effective approach for selecting the correct solution.
-
-
-### Key Figures
-The two key plots of our work underline the impact of both contributions in isolation. 
-
-<div class="md:mx-20">
-![**Performance impact of DFS-based sampling**: Number of solutions found by various sampling algorithms as a function of runtime. The different values for each sampling variant are calculated using 1 (identity), 2 (reflections), 4 (rotation), 8 (reflections+rotation) and 16 augmentations. Additionally, colors and the order or examples are randomly permuted in each augmented version of a task. For almost any runtime budget, we find that a DFS variant discovers the most solutions.](images/search_performance_comparison.png)
+<div class="md:mx-10">
+![**Inference-Time Scaling**: Performance improvement as a function of inference steps and latent size, demonstrating the new scaling dimension introduced by LTMs.](images/ppl_val_3.png)
 </div>
 
-<div class="md:mx-20">
-![**Performance impact of Product of Expert selection**: Accuracy and coverage of different selection methods as a function of the confidence threshold T. The solid black line shows the proportion of tasks where the correct solution is among the generated candidates. The solid colored lines show what percentage of the tasks would be solved using different aggregation methods (top-2 accuracy), while the dotted lines show how this percentage relates to the black line. Our product of probabilities approach performs best among the tested aggregation methods.](images/accuracy_selection_methods.png)
+2. **Sample and Computational Efficiency**
+LTMs achieve superior efficiency by leveraging inference steps and latent size to improve performance more effectively than simply scaling model parameters or training data.
+
+<div class="md:mx-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+![Sample Efficiency](images/scaling_tokens_new.png)
+
+![Computational Efficiency](images/scaling_flops_new.png)
 </div>
 
-### Comparative Analysis
-Our method achieves a score of 71.6% (286.5/400 solved tasks) on the public ARC-AGI evaluation set, demonstrating state-of-the-art performance among publicly available approaches. Notably, this performance is achieved with a remarkably low inference cost, averaging only around 2 cents per task on readily available hardware.
+3. **Emergent In-Context Learning in Mathematics**
+LTMs demonstrate emergent few-shot mathematical reasoning capabilities at remarkably small scales. The explicit latent thought modeling enables mathematical reasoning to emerge much earlier in model scaling than traditional approaches.
 
-To contextualize our results, we compare our method with other approaches:
+<div class="md:mx-20">
+![**Mathematical Reasoning**: Emergent in-context learning capabilities for mathematical tasks at small model scales. (LTM-L has 76M parameters.)](images/gsm8k.png)
+</div>
 
-| Method             | Score (%) | Open Source Weights  | Inference Cost per Task |
-|--------------------|-----------|----------------------|-------------------------|
-| Our Method         | 71.6      | yes                  | ~$0.02                  |
-| Average Human      | 60.2      | ?                    | ?                       |
-| OpenAI's o3        | 82.8      | no                   | ~$17                    |
+## Conclusion {#conclusion}
 
-*Table 1: Comparative performance on ARC-AGI evaluation set.*
+Latent Thought Models represent a significant advancement in language modeling by introducing explicit latent thought vectors and inference-time computation as a new scaling dimension. The dual-rate optimization within the variational Bayes framework enables superior sample and parameter efficiency while maintaining competitive generation quality. 
 
-
-
-
-## Conclusion
-
-By integrating task-specific data augmentations, a depth-first search algorithm, and leveraging LLMs as both generators and scorers, our method significantly enhances performance on the ARC-AGI benchmark. This approach underscores the potential of combining strategic data processing techniques with powerful language models to tackle complex abstract reasoning tasks.
+This work opens new directions for efficient language model design and suggests that explicit modeling of internal representations can unlock additional scaling dimensions beyond traditional approaches. The ability to trade model size for inference computation provides flexible deployment strategies for resource-constrained environments.
 
 ## Acknowledgements
-We sincerely thank [Lambda](https://lambda.ai) for providing 8xH100 GPUs that enabled rapid iteration of our ideas. This work was supported by the [Carl-Zeiss-Stiftung](https://carl-zeiss-stiftung.d) through the "Research Center for Algorithmic Intelligence as an Emergent Phenomenon" and by the [Deutsche Forschungsgemeinschaft](https://dfg.de) (DFG, German Research Foundation), project 233630050 (TRR 146).
-
+We thank Ruiqi Gao and Kevin Murphy from Google DeepMind for insightful discussions and valuable suggestions. Y. W. was partially supported by NSF DMS-2015577, NSF DMS-2415226, and a gift fund from Amazon. We gratefully acknowledge the support of [Lambda, Inc.](https://lambda.ai) for providing the compute for this project.
 
 ## Related Links
-- Our [GTC'25 Talk](https://www.nvidia.com/en-us/on-demand/session/gtc25-s74252/) focusing on the competition and the technical aspects of this project
-- The [arcprize.org](https://arcprize.org) project and last year's [ARC Kaggle Competition 2024](https://www.kaggle.com/competitions/arc-prize-2024/leaderboard) that initiated this work.
 
 
 ## BibTeX {#bibtex}
@@ -179,13 +184,11 @@ If you consider citing us, feel free to use the bibtex-entry below.
   <button class="copy-button">Copy</button>
 
 ```bibtex
-@article{poeforllms2025arc,
-  author={Daniel Franzen and Jan Disselhoff and David Hartmann},
-  title={Product of Experts for LLMs: Boosting Performance on ARC is a Matter of Perspective},
-  booktitle    = {Forty-second International Conference on Machine Learning, {ICML} 2025, Vancouver, Canada},
-  publisher    = {OpenReview.net},
-  year={2025},
-  url          = {https://openreview.net/forum?id=dsBjxI6l8W},
+@article{kong2025latent,
+  title = {Latent Thought Models with Variational Bayes Inference-Time Computation},
+  author = {Kong, Deqian and Zhao, Minglu and Xu, Dehong and Pang, Bo and Wang, Shu and Honig, Edouardo and Si, Zhangzhang and Li, Chuan and Xie, Jianwen and Xie, Sirui and Wu, Ying Nian},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
+  year = {2025}
 }
 ```
 </div>
