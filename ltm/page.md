@@ -152,9 +152,16 @@ LTMs demonstrate a new scaling dimension beyond traditional model parameters. Pe
 2. **Sample and Computational Efficiency**
 LTMs achieve superior efficiency by leveraging inference steps and latent size to improve performance more effectively than simply scaling model parameters or training data.
 
-<div class="md:mx-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- <div class="md:mx-5 grid grid-cols-1 md:grid-cols-2 gap-4">
 ![Sample Efficiency](images/scaling_tokens_new.png)
 
+![Computational Efficiency](images/scaling_flops_new.png)
+</div> -->
+<div class="md:mx-20">
+![Sample Efficiency](images/scaling_tokens_new.png)
+</div>
+
+<div class="md:mx-20">
 ![Computational Efficiency](images/scaling_flops_new.png)
 </div>
 
