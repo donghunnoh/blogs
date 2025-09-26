@@ -1,428 +1,1338 @@
-<!-- template.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Standard favicon -->
-  <link rel="icon" type="image/x-icon" href="./favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latent Adaptive Planner for Dynamic Manipulation</title>
 
-  <!-- Apple Touch Icons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="./apple-touch-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="./apple-touch-icon-120x120.png">
-
-  <!-- Microsoft Tiles -->
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="./mstile-144x144.png">
-
-  <!-- Web App Manifest -->
-  <link rel="manifest" href="./site.webmanifest">
-
-  <!-- Font Awesome (Open Source Icons) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- SEO / Social meta -->
-  <meta name="description" content="<p>We propose Latent Thought Models (LTMs) that add explicit “latent thought vectors” as internal abstract representations. Before generating text, LTMs first develop those internal thoughts, then use them to guide word-by-word generation. The model learns through a dual-rate process: fast learning that adapts thoughts for specific text and slow learning of general linguistic patterns. Compared to LLMs, LTMs achieve much better sample and computational efficiency. LTMs demonstrate in-context learning at a significantly smaller scale. Most importantly, LTMs introduce “inference-time computation” as a new scaling axis beyond LLMs, potentially transforming how we build efficient and generalizable AI systems.</p>">
-  <meta name="keywords" content="Inference-time computationLanguage modelsVariational BayesLatent variable model">
-  <meta name="author" content="Deqian Kong">
-
-  <!-- OpenGraph / Twitter -->
-  <meta property="og:title" content="Latent Thought Models:">
-  <meta property="og:description" content="<p>We propose Latent Thought Models (LTMs) that add explicit “latent thought vectors” as internal abstract representations. Before generating text, LTMs first develop those internal thoughts, then use them to guide word-by-word generation. The model learns through a dual-rate process: fast learning that adapts thoughts for specific text and slow learning of general linguistic patterns. Compared to LLMs, LTMs achieve much better sample and computational efficiency. LTMs demonstrate in-context learning at a significantly smaller scale. Most importantly, LTMs introduce “inference-time computation” as a new scaling axis beyond LLMs, potentially transforming how we build efficient and generalizable AI systems.</p>">
-  
-  <link rel="canonical" href="https://arxiv.org/pdf/2502.01567">
-
-  <title>Latent Thought Models:</title>
-
-  <!-- MIT‑licensed font delivered via MIT‑licensed jsDelivr CDN (Fontsource). -->
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link href="https://cdn.jsdelivr.net/npm/@fontsource/figtree@5.0.14/index.min.css" rel="stylesheet" />
-
-  <!-- Tailwind CSS + Typography plugin -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        fontFamily: {
-          sans: ['Figtree', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
-          serif: ['Figtree', 'Georgia', 'Times New Roman', 'Times', 'serif']
-        },
-        extend: {
-          typography: ({ theme }) => ({
-            DEFAULT: {
-              css: {
-                color: theme('colors.gray.700'),
-                fontFamily: theme('fontFamily.sans').join(','),
-                a: {
-                  color: theme('colors.blue.600'),
-                  textDecoration: 'none',
-                  borderBottom: '1px solid ' + theme('colors.blue.200'),
-                  transition: 'all 0.2s ease',
-                  '&:hover': { 
-                    color: theme('colors.blue.700'),
-                    borderBottomColor: theme('colors.blue.600')
-                  }
-                },
-                h1: {
-                  fontFamily: theme('fontFamily.serif').join(','),
-                  fontWeight: '700',
-                  color: theme('colors.gray.900')
-                },
-                h2: {
-                  fontFamily: theme('fontFamily.serif').join(','),
-                  fontWeight: '700',
-                  color: theme('colors.gray.900'),
-                  marginTop: '2em',
-                  marginBottom: '0.5em',
-                  fontSize: '1.75rem'
-                },
-                h3: {
-                  fontFamily: theme('fontFamily.serif').join(','),
-                  fontWeight: '600',
-                  color: theme('colors.gray.800'),
-                  marginTop: '1.5em',
-                  marginBottom: '0.5em',
-                  fontSize: '1.35rem'
-                },
-                p: { 
-                  marginBottom: '1.25em',
-                  lineHeight: '1.7'
-                },
-                blockquote: {
-                  fontStyle: 'italic',
-                  color: theme('colors.gray.600'),
-                  borderLeftColor: theme('colors.blue.200'),
-                  paddingLeft: '1em',
-                  backgroundColor: theme('colors.gray.50'),
-                  borderRadius: '0.25rem',
-                  margin: '1.5rem 0',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-                },
-                'h2#tldr + p': {
-                  position: 'relative',
-                  background: theme('colors.blue.50'),
-                  borderLeft: '3px solid ' + theme('colors.blue.500'),
-                  margin: '0.5rem 0 2.5rem',
-                  padding: '1.75rem 2rem',
-                  fontSize: '0.95rem',
-                  lineHeight: '1.8',
-                  color: theme('colors.gray.700'),
-                  borderRadius: '0.3rem',
-                  boxShadow: '0 2px 5px rgba(0,0,0,0.04)',
-                },
-                'h2#tldr': {
-                  marginBottom: '1.5rem',
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  color: theme('colors.white'),
-                  backgroundColor: theme('colors.blue.600'),
-                  display: 'inline-block',
-                  padding: '0.3rem 1rem',
-                  borderRadius: '9999px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                },
-                code: {
-                  backgroundColor: theme('colors.gray.100'),
-                  padding: '0.2em 0.4em',
-                  borderRadius: '0.25em',
-                  fontSize: '0.9em',
-                  border: '1px solid ' + theme('colors.gray.200')
-                },
-                pre: {
-                  backgroundColor: theme('colors.gray.50'),
-                  padding: '1.25em',
-                  borderRadius: '0.5em',
-                  overflowX: 'auto',
-                  color: theme('colors.gray.800'),
-                  border: '1px solid ' + theme('colors.gray.200'),
-                  boxShadow: '0 2px 5px rgba(0,0,0,0.03)'
-                },
-                'pre code': {
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  padding: '0'
-                },
-                'ul > li::marker': { color: theme('colors.blue.500') },
-                'ol > li::marker': { color: theme('colors.gray.600') },
-                strong: { color: theme('colors.gray.900'), fontWeight: '600' },
-                table: {
-                  fontSize: '0.9rem',
-                  width: '100%',
-                  marginTop: '2rem',
-                  marginBottom: '2rem',
-                  borderCollapse: 'separate',
-                  borderSpacing: '0',
-                  boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
-                  borderRadius: '0.375rem',
-                  overflow: 'hidden'
-                },
-                'thead th': {
-                  backgroundColor: theme('colors.gray.50'),
-                  borderBottom: '1px solid ' + theme('colors.gray.200')
-                },
-                'tbody tr': {
-                  borderBottom: '1px solid ' + theme('colors.gray.100'),
-                  '&:last-child': { borderBottom: 'none' }
-                }
-              }
-            }
-          })
-        }
-      }
+<!-- MathJax for rendering mathematical formulas -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
     }
-  </script>
-  
-  <!-- Copy to clipboard functionality -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const copyButtons = document.querySelectorAll('.copy-button');
-      
-      copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const codeBlock = this.parentElement.nextElementSibling.querySelector('code');
-          const textToCopy = codeBlock.innerText;
-          
-          navigator.clipboard.writeText(textToCopy).then(() => {
-            // Change button text temporarily
-            const originalText = this.innerText;
-            this.innerText = 'Copied!';
-            this.classList.add('copied');
-            
-            setTimeout(() => {
-              this.innerText = originalText;
-              this.classList.remove('copied');
-            }, 2000);
-          });
-        });
-      });
-    });
-  </script>
-  
-  <style>
-    .copy-button {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      padding: 0.25rem 0.75rem;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: 1px solid #e2e8f0;
-      border-radius: 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #4a5568;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      z-index: 10;
-    }
-    
-    .copy-button:hover {
-      background-color: #f7fafc;
-      border-color: #cbd5e0;
-    }
-    
-    .copy-button.copied {
-      background-color: #e6ffed;
-      border-color: #a3e635;
-      color: #15803d;
-    }
-    
-    .code-block-wrapper {
-      position: relative;
-    }
-  </style>
-  
-  <!-- LiveReload script (will only connect when the LiveReload server is running) -->
-    <script>
-    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':8000/livereload.js?snipver=1"></' + 'script>')
-  </script>
-  </head>
-<body class="text-gray-700 font-sans">
+  };
+</script>
 
-  <!-- Header -->
-  <header class="bg-white shadow-sm py-8 mb-12">
-    <div class="mx-auto max-w-3xl px-4 text-center">
-      <h1 class="text-4xl font-serif font-bold text-gray-900">Latent Thought Models:</h1>
-      <p class="mt-2 text-2xl text-gray-900">Language models with explicit latent thought vectors and variational Bayes inference-time computation</p>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
 
-      <!-- Author list with affiliation superscripts -->
-      <p class="mt-4 text-gray-600 text-lg flex justify-center flex-wrap gap-x-4 gap-y-0.5">
-                              <span class="whitespace-nowrap">
-                              <a href="https://sites.google.com/view/deqiankong/" class="text-blue-600 hover:underline -mr-1">Deqian Kong</a>
-                            <sup>12*</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://mingluzhao.github.io" class="text-blue-600 hover:underline -mr-1">Minglu Zhao</a>
-                            <sup>1*</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://dehongxu.github.io" class="text-blue-600 hover:underline -mr-1">Dehong Xu</a>
-                            <sup>1*</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://bpucla.github.io" class="text-blue-600 hover:underline -mr-1">Bo Pang</a>
-                            <sup>3</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://scholar.google.com/citations?user=uPk5l1EAAAAJ&amp;hl=en" class="text-blue-600 hover:underline -mr-1">Shu Wang</a>
-                            <sup>1</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="http://www.stat.ucla.edu/~edouardohonig/" class="text-blue-600 hover:underline -mr-1">Edouardo Honig</a>
-                            <sup>1</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://www.kungfu.ai/person/zz-si" class="text-blue-600 hover:underline -mr-1">Zhangzhang Si</a>
-                            <sup>4</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://scholar.google.com/citations?user=hoZesOwAAAAJ&amp;hl=en" class="text-blue-600 hover:underline -mr-1">Chuan Li</a>
-                            <sup>2</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="http://www.stat.ucla.edu/~jxie/" class="text-blue-600 hover:underline -mr-1">Jianwen Xie</a>
-                            <sup>2**</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="https://siruixie.com" class="text-blue-600 hover:underline -mr-1">Sirui Xie</a>
-                            <sup>1**</sup>
-            </span> 
-                      <span class="whitespace-nowrap">
-                              <a href="http://www.stat.ucla.edu/~ywu/research.html" class="text-blue-600 hover:underline -mr-1">Ying Nian Wu</a>
-                            <sup>1**</sup>
-            </span>              </p>
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+line-height: 1.6;
+color: #333;
+background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+min-height: 100vh;
+}
 
-      <!-- Affiliations list -->
-            <div class="mt-2 text-gray-600 text-md flex gap-x-2 justify-center flex-wrap">
-                  <span><sup>1</sup> UCLA</span>
-                  <span><sup>2</sup> Lambda, Inc.</span>
-                  <span><sup>3</sup> Salesforce Research</span>
-                  <span><sup>4</sup> KUNGFU.AI</span>
-                  <span><sup>*</sup> Equal Contribution</span>
-                  <span><sup>**</sup> Equal Advising</span>
-              </div>
-      
-            <div class="mt-4 flex justify-center flex-wrap gap-3 sm:mx-10 md:mx-18">
-                  <a href="https://arxiv.org/pdf/2502.01567" class="px-5 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition flex items-center gap-2 shadow-sm">
-                          <i class="fas fa-file-alt"></i>
-                        Paper (arXiv)
-          </a>
-                  <a href="" class="px-5 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition flex items-center gap-2 shadow-sm">
-                          <i class="fas fa-code"></i>
-                        Code (GitHub)
-          </a>
-              </div>
-          </div>
-  </header>
+.container {
+max-width: 1200px;
+margin: 0 auto;
+background: white;
+box-shadow: 0 0 30px rgba(0,0,0,0.1);
+min-height: 100vh;
+}
 
-  <!-- Main content -->
-  <main class="mx-auto max-w-3xl px-4 mb-16">
-    <article class="prose prose-lg mx-auto bg-white p-8">
-      <div class="text-center -mt-20 text-gray-600">
-      <p>Jump to: <a href="#tldr">TL;DR</a>, <a href="#introduction">Introduction</a>, <a href="#key-findings">Key Findings</a>, <a href="#conclusion">Conclusion</a>, <a href="#acknowledgements">Acknowledgements</a>, <a href="#related-links">Related Links</a>, <a href="#bibtex">Cite</a></p>
-      </div>
-      <h2 id="tldr">TL;DR</h2>
-      <p>We introduce Latent Thought Models (LTMs), a novel class of language models that incorporate explicit <strong>latent thought vectors</strong> following a prior model in latent space. LTMs use a dual-rate optimization process within the variational Bayes framework: fast inference-time computation for latent vectors and slow learning of decoder parameters. This approach achieves superior sample and parameter efficiency compared to autoregressive models and introduces <strong>inference-time computation</strong> as a new scaling dimension beyond traditional LLMs.</p>
-      <div class="mt-10" style="max-width: 700px; margin: 0 auto;">
-      <img 
-          src="images/model.png" 
-          alt="High-Level Overview: LTMs first develop internal latent thoughts, then use them to guide autoregressive text generation through a Transformer decoder." 
-          style="width: 70%; height: auto; display: block; margin: 0 auto;"
-        />
-      <p style="margin-top: 8px; font-size: 14px; color: #555; text-align: left;">
-      High-Level Overview: LTMs first develop internal latent thoughts vectors 𝑧, then use them to guide autoregressive text generation 𝑥 through a Transformer decoder.
-      </p>
-      </div>
-      <h2 id="introduction">Introduction</h2>
-      <p>Current language models scale primarily through increasing parameters and training data, leaving inference-time computation largely unexplored. We introduce Latent Thought Models (LTMs) that incorporate explicit “thinking” before generation (or speaking).</p>
-      <p><strong>Key Inspirations</strong>:</p>
-      <ol type="1">
-      <li><p><strong>Declarative vs. Procedural Memory</strong>: Latent vectors parallel declarative/episodic memory with fast learning, while global decoder parameters mirror procedural memory with slow learning;</p></li>
-      <li><p><strong>Complementary Learning Systems: Fast and Slow</strong>: Our dual-rate learning mirrors the hippocampus (rapid learning of specific experiences) and neocortex (slower learning of general knowledge).</p></li>
-      <li><p><strong>Language of Thought</strong>: Latent vectors serve as “words” in an internal cognitive language—a “mentalese” that underlies our ability to learn and use natural languages, realizing a computational “think before speak” paradigm.</p></li>
-      </ol>
-      <p><strong>Why This Matters</strong>: LTMs unlock inference-time computation as a new scaling dimension—the process of finding better internal representations (posterior distributions of latent thought vectors). Just as humans can achieve better understanding by “thinking harder” about a problem, LTMs can use more inference-time computation to achieve better performance with significantly less training data and computation.</p>
-      <h2 id="key-findings">Key Findings</h2>
-      <p>Our empirical studies reveal several important discoveries about LTMs’ unique scaling properties and capabilities:</p>
-      <ol type="1">
-      <li><strong>Scaling Behaviors of Inference-Time Computation</strong> LTMs demonstrate a new scaling dimension beyond traditional model parameters. Performance consistently improves with more inference steps, as the model iteratively refines latent thought vectors to find better internal representations.</li>
-      </ol>
-      <div class="md:mx-10">
-      <figure>
-      <img src="images/ppl_val_3.png" alt="" /><figcaption><strong>Inference-Time Scaling</strong>: Performance improvement as a function of inference steps and latent size, demonstrating the new scaling dimension introduced by LTMs.</figcaption>
-      </figure>
-      </div>
-      <ol start="2" type="1">
-      <li><strong>Sample and Computational Efficiency</strong> LTMs achieve superior efficiency by leveraging inference steps and latent size to improve performance more effectively than simply scaling model parameters or training data.</li>
-      </ol>
-      <!-- <div class="md:mx-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-      ![Sample Efficiency](images/scaling_tokens_new.png)
+.header {
+background: white;
+color: #333;
+padding: 3rem 2rem;
+text-align: center;
+position: relative;
+overflow: hidden;
+border-bottom: 3px solid #2774AE;
+}
 
-      ![Computational Efficiency](images/scaling_flops_new.png)
-      </div> -->
-      <div class="md:mx-20">
-      <figure>
-      <img src="images/scaling_tokens_new.png" alt="" /><figcaption>Sample Efficiency</figcaption>
-      </figure>
-      </div>
-      <div class="md:mx-20">
-      <figure>
-      <img src="images/scaling_flops_new.png" alt="" /><figcaption>Computational Efficiency</figcaption>
-      </figure>
-      </div>
-      <ol start="3" type="1">
-      <li><strong>Emergent In-Context Learning in Mathematics</strong> LTMs demonstrate emergent few-shot mathematical reasoning capabilities at remarkably small scales. The explicit latent thought modeling enables mathematical reasoning to emerge much earlier in model scaling than traditional approaches.</li>
-      </ol>
-      <div class="md:mx-20">
-      <figure>
-      <img src="images/gsm8k.png" alt="" /><figcaption><strong>Mathematical Reasoning</strong>: Emergent in-context learning capabilities for mathematical tasks at small model scales. (LTM-L has 76M parameters.)</figcaption>
-      </figure>
-      </div>
-      <h2 id="conclusion">Conclusion</h2>
-      <p>Latent Thought Models represent a significant advancement in language modeling by introducing explicit latent thought vectors and inference-time computation as a new scaling dimension. The dual-rate optimization within the variational Bayes framework enables superior sample and parameter efficiency while maintaining competitive generation quality.</p>
-      <p>This work opens new directions for efficient language model design and suggests that explicit modeling of internal representations can unlock additional scaling dimensions beyond traditional approaches. The ability to trade model size for inference computation provides flexible deployment strategies for resource-constrained environments.</p>
-      <h2 id="acknowledgements">Acknowledgements</h2>
-      <p>We thank Ruiqi Gao and Kevin Murphy from Google DeepMind for insightful discussions and valuable suggestions. Y. W. was partially supported by NSF DMS-2015577, NSF DMS-2415226, and a gift fund from Amazon. We gratefully acknowledge the support of <a href="https://lambda.ai">Lambda, Inc.</a> for providing the compute for this project.</p>
-      <h2 id="related-links">Related Links</h2>
-      <h2 id="bibtex">BibTeX</h2>
-      <p>If you consider citing us, feel free to use the bibtex-entry below.</p>
-      <div class="code-block-wrapper">
-      <p><button class="copy-button">Copy</button></p>
-      <div class="sourceCode" id="cb1"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="va">@article</span>{<span class="ot">kong2025latent</span>,</span>
-      <span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="dt">title</span> = {Latent Thought Models with Variational Bayes Inference-Time Computation},</span>
-      <span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  <span class="dt">author</span> = {Kong, Deqian and Zhao, Minglu and Xu, Dehong and Pang, Bo and Wang, Shu and Honig, Edouardo and Si, Zhangzhang and Li, Chuan and Xie, Jianwen and Xie, Sirui and Wu, Ying Nian},</span>
-      <span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  <span class="dt">booktitle</span> = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},</span>
-      <span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>  <span class="dt">year</span> = {2025}</span>
-      <span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>}</span></code></pre></div>
-      </div>
-    </article>
-  </main>
+.header-content {
+position: relative;
+z-index: 2;
+}
 
-  <!-- Footer -->
-  <footer class="bg-white py-6 border-t border-gray-100 shadow-inner">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <div class="mb-2">
-                <div class="flex justify-center flex-wrap gap-2 mb-4">
-                      <a href="https://arxiv.org/pdf/2502.01567" class="text-gray-500 hover:text-blue-500 transition-colors duration-200 mx-2">
-                              <i class="fas fa-file-alt"></i>
-                          </a>
-                      <a href="" class="text-gray-500 hover:text-blue-500 transition-colors duration-200 mx-2">
-                              <i class="fas fa-code"></i>
-                          </a>
-          	      <a href="https://librecounter.org/referer/show" class="text-gray-500 hover:text-blue-500 transition-colors duration-200 mx-2" target="_blank">
-			<img src="https://librecounter.org/outline-orange.svg" referrerPolicy="unsafe-url" width="24"/>
-	      </a>
+.title {
+font-size: 2.8rem;
+font-weight: bold;
+margin-bottom: 1rem;
+color: #2774AE;
+}
+
+.authors {
+font-size: 1.2rem;
+margin-bottom: 0.5rem;
+color: #555;
+}
+
+.affiliations {
+font-size: 1rem;
+color: #666;
+margin-bottom: 2rem;
+}
+
+.institution-logos {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 2rem;
+margin-top: 1rem;
+}
+
+.institution-logos img {
+height: 60px;
+opacity: 0.8;
+}
+
+.links {
+display: flex;
+justify-content: center;
+gap: 1rem;
+margin-top: 2rem;
+flex-wrap: wrap;
+}
+
+.btn {
+background: #2774AE;
+color: white;
+padding: 0.8rem 1.5rem;
+text-decoration: none;
+border-radius: 25px;
+font-weight: 600;
+transition: all 0.3s ease;
+border: 2px solid #2774AE;
+}
+
+.btn:hover {
+background: #1e5a96;
+border-color: #1e5a96;
+transform: translateY(-2px);
+box-shadow: 0 5px 15px rgba(39, 116, 174, 0.3);
+}
+
+.content {
+padding: 2rem;
+}
+
+.video-section {
+text-align: center;
+margin: 3rem 0;
+padding: 2rem;
+background: #f8f9fa;
+border-radius: 15px;
+box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.video-title {
+font-size: 1.5rem;
+font-weight: bold;
+margin-bottom: 1.5rem;
+color: #2774AE;
+}
+
+.video-wrapper {
+position: relative;
+padding-bottom: 56.25%;
+height: 0;
+overflow: hidden;
+border-radius: 10px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.video-wrapper iframe {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+.experiments-section {
+margin: 2rem 0;
+}
+
+.method-section {
+background: white;
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+margin-bottom: 3rem;
+}
+
+.method-header {
+padding: 1.5rem;
+font-size: 1.5rem;
+font-weight: bold;
+text-align: center;
+color: white;
+}
+
+.model-based { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.bc { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.diffusion { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.lap { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+.videos-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1.5rem;
+padding: 2rem;
+}
+
+.video-item {
+display: flex;
+flex-direction: column;
+}
+
+.video-container {
+aspect-ratio: 16/9;
+background: #000;
+border-radius: 8px;
+overflow: hidden;
+position: relative;
+margin-bottom: 0.5rem;
+}
+
+.video-container video {
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+
+.video-caption {
+text-align: center;
+font-size: 0.9rem;
+color: #666;
+padding: 0.5rem 0;
+}
+
+.video-placeholder {
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+      linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+      linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+background-size: 20px 20px;
+background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+color: #666;
+font-size: 0.9rem;
+text-align: center;
+opacity: 0.7;
+}
+
+.section {
+margin: 3rem 0;
+padding: 2rem 0;
+}
+
+.section-title {
+font-size: 2rem;
+font-weight: bold;
+margin-bottom: 1.5rem;
+color: #2774AE;
+border-bottom: 3px solid #FFD100;
+padding-bottom: 0.5rem;
+}
+
+.subsection-title {
+font-size: 1.3rem;
+font-weight: bold;
+margin: 2rem 0 1rem 0;
+color: #444;
+}
+
+.text-content {
+font-size: 1.1rem;
+line-height: 1.8;
+margin-bottom: 1.5rem;
+text-align: justify;
+}
+
+.highlight {
+background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+padding: 1.5rem;
+border-radius: 10px;
+border-left: 4px solid #2774AE;
+margin: 2rem 0;
+}
+
+.features-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 1.5rem;
+margin: 2rem 0;
+}
+
+.feature-card {
+background: white;
+padding: 1.5rem;
+border-radius: 10px;
+box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+border-top: 3px solid #2774AE;
+}
+
+.feature-card h3 {
+color: #2774AE;
+margin-bottom: 1rem;
+}
+
+.results-table {
+overflow-x: auto;
+margin: 2rem 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+background: white;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+th, td {
+padding: 1rem;
+text-align: center;
+border-bottom: 1px solid #eee;
+}
+
+th {
+background: #2774AE;
+color: white;
+font-weight: bold;
+}
+
+.best-result {
+background: #e8f5e8;
+font-weight: bold;
+color: #2d5d2d;
+}
+
+.image-figure {
+text-align: center;
+margin: 2rem 0;
+}
+
+.image-figure img {
+max-width: 100%;
+height: auto;
+border-radius: 10px;
+box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.image-caption {
+margin-top: 1rem;
+font-style: italic;
+color: #666;
+font-size: 1.2rem;
+}
+
+.two-column {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 2rem;
+align-items: center;
+margin: 2rem 0;
+}
+
+.citation {
+background: #f8f9fa;
+padding: 1.5rem;
+border-radius: 10px;
+border-left: 4px solid #2774AE;
+font-family: 'Courier New', monospace;
+font-size: 0.9rem;
+margin: 2rem 0;
+position: relative;
+}
+
+.copy-btn {
+position: absolute;
+top: 10px;
+right: 10px;
+background: #2774AE;
+color: white;
+border: none;
+padding: 0.5rem 1rem;
+border-radius: 5px;
+cursor: pointer;
+font-size: 0.8rem;
+}
+
+.copy-btn:hover {
+background: #1e5a96;
+}
+
+.equation-box {
+background: #f8f9fa;
+padding: 1.5rem;
+border-radius: 10px;
+margin: 1rem 0;
+font-size: 1.1rem;
+overflow-x: auto;
+}
+
+@media (max-width: 1024px) {
+.videos-grid {
+grid-template-columns: repeat(2, 1fr);
+}
+}
+
+@media (max-width: 768px) {
+.title {
+font-size: 2rem;
+}
+
+.authors {
+font-size: 1rem;
+}
+
+.content {
+padding: 1rem;
+}
+
+.two-column {
+grid-template-columns: 1fr;
+}
+
+.institution-logos {
+flex-direction: column;
+gap: 1rem;
+}
+
+.videos-grid {
+grid-template-columns: 1fr;
+}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="header">
+<div class="header-content">
+<h1 class="title">Latent Adaptive Planner for Dynamic Manipulation</h1>
+<div class="authors">
+  Donghun Noh<sup>1†</sup>, Deqian Kong<sup>1,2†</sup>, Minglu Zhao<sup>1</sup>, Andrew Lizarraga<sup>1</sup>, 
+  Jianwen Xie<sup>2</sup>, Ying Nian Wu<sup>1‡</sup>, Dennis Hong<sup>1‡</sup>
+</div>
+<div class="affiliations">
+  <sup>1</sup>UCLA, <sup>2</sup>Lambda Inc. 
+  <br><sup>†</sup>Equal Contribution, <sup>‡</sup>Equal Advising
+</div>
+
+<div class="institution-logos">
+  <img src="images/ucla.png" alt="UCLA">
+  <img src="images/romela.png" alt="ROMELA">
+  <img src="images/lambda.png" alt="Lambda">
+</div>
+
+<div class="links">
+  <a href="#" class="btn">📄 Paper (arXiv)</a>
+  <a href="#" class="btn" style="opacity: 0.7; cursor: not-allowed;">💻 Code (Coming Soon)</a>
+</div>
+</div>
+</header>
+
+<main class="content">
+<!-- Spotlight Video Section -->
+<div class="video-section">
+  <h2 class="video-title">🎬 1-Minute Spotlight Video</h2>
+  <div class="video-wrapper">
+    <iframe src="https://www.youtube.com/embed/B9eLiZ1-NRQ" 
+            title="LAP Spotlight Video" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+    </iframe>
+  </div>
+  </div>
+
+<!-- TL;DR Section -->
+<div class="highlight">
+<h2 style="margin-top: 0; color: #2774AE;">🎯 TL;DR</h2>
+<p>We propose <strong>Latent Adaptive Planner (LAP)</strong>, a trajectory-level latent variable policy for dynamic manipulation that learns effectively from human demonstration videos and achieves real-time adaptation through variational replanning. LAP demonstrates <strong>5-6.5× lower energy consumption</strong> compared to model-based methods while maintaining a near-perfect 98% success rate.</p>
+</div>
+
+<div class="lap-highlight">
+  <div class="method-header lap">LAP Box Catching</div>
+  <div class="videos-grid">
+      <div class="video-item">
+        <div class="video-container">
+          <video controls autoplay muted loop>
+              <source src="videos/lap-robot-A-box-1.mp4" type="video/mp4">
+          </video>
         </div>
-              </div>
-      <div class="text-gray-500 text-sm">
-        &copy; 2025 Deqian Kong.
-                  Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="text-blue-600 hover:underline transition-colors duration-200">CC BY-SA 4.0</a>.
-              </div>
-    </div>
-  </footer>
+          <div class="video-caption">Robot A - Box 1</div>
+      </div>
+      <div class="video-item">
+          <div class="video-container">
+              <video controls autoplay muted loop>
+                <source src="videos/lap-robot-A-box-2.mp4" type="video/mp4">
+              </video>
+          </div>
+          <div class="video-caption">Robot A - Box 2</div>
+      </div>
+      <div class="video-item">
+          <div class="video-container">
+              <video controls autoplay muted loop>
+                <source src="videos/lap-robot-A-box-3.mp4" type="video/mp4">
+              </video>
+          </div>
+          <div class="video-caption">Robot A - Box 3</div>
+      </div>
+      <div class="video-item">
+          <div class="video-container">
+              <video controls autoplay muted loop>
+                <source src="videos/lap-robot-B-box-1.mp4" type="video/mp4">
+              </video>
+          </div>
+          <div class="video-caption">Robot B - Box 1</div>
+      </div>
+      <div class="video-item">
+          <div class="video-container">
+              <video controls autoplay muted loop>
+                <source src="videos/lap-robot-B-box-2.mp4" type="video/mp4">
+              </video>
+          </div>
+          <div class="video-caption">Robot B - Box 2</div>
+      </div>
+      <div class="video-item">
+          <div class="video-container">
+              <video controls autoplay muted loop>
+                <source src="videos/lap-robot-B-box-3.mp4" type="video/mp4">
+              </video>
+          </div>
+          <div class="video-caption">Robot B - Box 3</div>
+      </div>
+  </div>
+</div>
 
+<!-- Introduction Section -->
+<section class="section">
+<h2 class="section-title">📖 Introduction</h2>
+
+<div class="text-content">
+  We present <strong>Latent Adaptive Planner (LAP)</strong>, a trajectory-level latent-variable policy for dynamic manipulation that addresses three fundamental challenges:
+</div>
+
+<div class="features-grid">
+  <div class="feature-card">
+      <h3>🎓 Learning from Human Demonstrations</h3>
+      <p>Effectively learns from human demonstration videos through model-based data regeneration that bridges the embodiment gap between humans and robots</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>⚡ Real-Time Adaptation</h3>
+      <p>Achieves real-time adaptation through variational replanning with hierarchical control: 30Hz planning, 100Hz policy, and 1kHz MPC</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>🔄 Cross-Platform Transfer</h3>
+      <p>Enables cross-platform transfer via model-based data regeneration, validating on two different robot embodiments</p>
+  </div>
+</div>
+
+<div class="text-content" style="margin-top: 2rem;">
+  The key innovation of LAP lies in combining classical variational Bayes learning with efficient variational replanning at inference time, enabling the robot to continuously refine its latent plans based on observed trajectories while maintaining smooth, human-like motion patterns.
+</div>
+</section>
+
+<!-- Dynamic Manipulation Section -->
+<section class="section">
+<h2 class="section-title">🎯 Dynamic Manipulation</h2>
+
+<div class="text-content">
+  <strong>Dynamic manipulation</strong> refers to the exploitation of object dynamics for real-time robotic control that goes beyond traditional quasi-static grasping approaches. Unlike manipulation tasks where objects remain nearly stationary, dynamic manipulation requires robots to interact with objects that are actively moving, rotating, or exhibiting complex dynamics.
+</div>
+
+<div class="highlight" style="margin: 2rem 0;">
+  <h3 style="color: #2774AE; margin-top: 0;">Why Box Catching?</h3>
+  <p>Box catching exemplifies the challenges of dynamic manipulation:</p>
+  <ul style="margin-top: 1rem; line-height: 1.8;">
+      <li><strong>Unpredictable Trajectories:</strong> Human throws combined with rectangular geometry create chaotic, hard-to-predict box motions</li>
+      <li><strong>Real-Time Requirements:</strong> Millisecond-scale prediction and reaction times are critical for success</li>
+      <li><strong>Dual-Arm Coordination:</strong> Requires precise coordination between two robot arms under uncertainty</li>
+      <li><strong>Immediate Failure Consequences:</strong> Timing errors or incorrect predictions lead to immediate task failure</li>
+  </ul>
+</div>
+
+<div class="text-content">
+  These characteristics make box catching an ideal testbed for evaluating dynamic manipulation capabilities, requiring the integration of perception, planning, and control at multiple time scales.
+</div>
+</section>
+
+<!-- System Architecture Section -->
+<section class="section">
+<h2 class="section-title">🏗️ System Architecture</h2>
+
+<div class="text-content">
+  LAP employs a hierarchical control architecture that operates at three distinct frequencies, enabling both reactive responses and smooth trajectory execution:
+</div>
+
+<div class="two-column" style="margin: 2rem 0;">
+  <div>
+      <div class="image-figure">
+          <img src="images/system_architecture.png" alt="System Architecture">
+          <div class="image-caption">Complete perception-planning-control pipeline</div>
+      </div>
+  </div>
+  <div>
+      <div class="feature-card">
+          <h3>Perception Module (100Hz)</h3>
+          <ul style="line-height: 1.8;">
+              <li><strong>Camera:</strong> ZED2 stereo camera for 3D perception</li>
+              <li><strong>Segmentation:</strong> YOLOv8 trained on custom dataset for box detection and tracking</li>
+              <li><strong>State Estimation:</strong> Real-time pose/size estimation of the box</li>
+          </ul>
+      </div>
+  </div>
+</div>
+
+<div class="features-grid">
+  <div class="feature-card">
+      <h3>LAP Planning Layer</h3>
+      <ul style="line-height: 1.8;">
+          <li><strong>Latent Update (30Hz):</strong> Variational replanning updates posterior distribution over latent variables</li>
+          <li><strong>Action Generation (100Hz):</strong> Transformer decoder generates control actions conditioned on latent plan</li>
+      </ul>
+  </div>
+  
+  <div class="feature-card">
+      <h3>MPC Controller (1kHz)</h3>
+      <ul style="line-height: 1.8;">
+          <li><strong>Trajectory Smoothing:</strong> Ensures physically feasible motions</li>
+          <li><strong>Constraint Enforcement:</strong> Joint limits, collision avoidance, torque limits</li>
+          <li><strong>Low-Level Control:</strong> Converts high-level actions to motor commands</li>
+      </ul>
+  </div>
+</div>
+
+<div class="text-content" style="margin-top: 2rem;">
+  This multi-rate architecture allows LAP to balance computational efficiency with responsiveness, dedicating more computation to latent plan updates while maintaining high-frequency action generation and control.
+</div>
+</section>
+
+<!-- Data Regeneration Pipeline Section -->
+<section class="section">
+<h2 class="section-title">🔄 Data Regeneration Pipeline</h2>
+
+<div class="text-content">
+  A critical challenge in learning from human demonstrations is the <strong>embodiment gap</strong>, which is the difference in physical structure, dynamics, and capabilities between humans and robots. Our model-based data regeneration pipeline addresses this through a three-stage process:
+</div>
+
+<div class="image-figure" style="margin: 2rem 0;">
+  <img src="images/data_regeneration_concept.png" alt="Data Regeneration Pipeline">
+  <div class="image-caption">Pipeline for transforming human demonstrations into robot-executable trajectories</div>
+</div>
+
+<div class="subsection-title">Stage 1: Scene State Estimation</div>
+<div class="features-grid">
+  <div class="feature-card">
+      <h3>Box Tracking</h3>
+      <p>Custom-trained YOLOv8 model detects and tracks the box in each video frame, estimating its 6D pose (position and orientation) through multi-view geometry</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Human Pose Estimation</h3>
+      <p>OpenMMLab's 2D pose estimation extracts human arm configurations from demonstration videos, providing skeletal joint positions</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Contact Detection</h3>
+      <p>Geometric reasoning between box pose/size and human hand positions identifies contact moments and forces during catching</p>
+  </div>
+</div>
+
+<div class="subsection-title">Stage 2: Object-Robot Proportional Mapping</div>
+<div class="text-content">
+  We transform the scene from the human's reference frame to the robot's reference frame while accounting for scale differences:
+</div>
+<div class="equation-box">
+  <strong>Frame Transformation:</strong> $^R p_{obj} = T_S^R \cdot \,^S p_{obj}$
+  <br><br>
+  <strong>Scale Adjustment:</strong> Scale by arm length ratio to match robot's workspace
+</div>
+
+<div class="subsection-title">Stage 3: Kinematic-Dynamic Reconstruction</div>
+<div class="text-content">
+  The final stage converts human arm motions into robot-executable trajectories:
+</div>
+<div class="features-grid">
+  <div class="feature-card">
+      <h3>Joint Mapping</h3>
+      <p>Map human joint angles to robot joint space: $q = f_{map}(q_{human})$, accounting for kinematic differences</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Velocity & Acceleration</h3>
+      <p>Compute joint velocities and accelerations through numerical differentiation with smoothing filters</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Inverse Dynamics</h3>
+      <p>Calculate required joint torques using the robot's dynamics model to reproduce the motion</p>
+  </div>
+</div>
+
+<div class="equation-box" style="text-align: center;">
+  <strong>Torque Computation:</strong>
+  <br><br>
+  $$\tau = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) + J^T F_{ext}$$
+</div>
+
+<div class="text-content">
+  This regenerated data provides physically consistent robot trajectories that preserve the essential motion strategies from human demonstrations while respecting the robot's physical constraints.
+</div>
+</section>
+
+<!-- LAP Model Section -->
+<section class="section">
+  <h2 class="section-title">🧠 LAP Model</h2>
+  
+  <div class="text-content">
+    The Latent Adaptive Planner models the joint distribution of trajectories and latent plans through a hierarchical generative process. Unlike standard behavior cloning, LAP introduces an explicit latent variable that captures high-level trajectory intentions.
+  </div>
+  
+  <div class="subsection-title">Joint Distribution</div>
+  <div class="equation-box" style="text-align: center;">
+      $$p_\theta(x, z) = p(z) \cdot p_\theta(x|z)$$
+      <div style="margin-top: 1rem;">
+          <strong>Prior:</strong> $z \sim \mathcal{N}(0, I_{64})$ where $z \in \mathbb{R}^{64}$
+      </div>
+  </div>
+  
+  <div class="text-content">
+      The latent variable <strong>z</strong> serves as a compact representation of the entire trajectory's plan. By sampling from the prior during generation or inferring during execution, LAP can produce diverse but coherent catching behaviors.
+  </div>
+  
+  <div class="subsection-title">Trajectory Generator</div>
+  <div class="equation-box">
+    $$p_\theta(x|z) = \prod_{t=1}^{T} p_\theta(a_t | o_{t-K:t}, a_{t-K:t-1}, z)$$
+    <br>
+    where $a_t \sim \mathcal{N}(g_\theta(\cdot), I_{|a|})$
+  </div>
+  
+  <div class="text-content">
+    The trajectory generator is implemented as a <strong>Causal Transformer</strong> that autoregressively predicts actions. Key architectural features include:
+  </div>
+  
+  <div class="features-grid">
+    <div class="feature-card">
+        <h3>Cross-Attention to Latent</h3>
+        <p>The Transformer decoder attends to the latent variable z at each layer, allowing the latent plan to guide action generation throughout the trajectory</p>
+    </div>
+    
+    <div class="feature-card">
+        <h3>History Context Window</h3>
+        <p>Conditions on past K timesteps of observations and actions $(o_{t-K:t}, a_{t-K:t-1})$ to capture temporal dependencies</p>
+    </div>
+    
+    <div class="feature-card">
+        <h3>Gaussian Action Distribution</h3>
+        <p>Outputs mean actions $g_\theta(\cdot)$ with fixed unit variance, enabling both deterministic execution and stochastic exploration</p>
+    </div>
+  </div>
+  
+  <div class="highlight" style="margin-top: 2rem;">
+    <h3 style="color: #2774AE; margin-top: 0;">Key Advantages</h3>
+    <ul style="line-height: 1.8;">
+        <li><strong>Open-Loop Generation:</strong> Can generate complete trajectories by unrolling from the latent plan</li>
+        <li><strong>Closed-Loop Adaptation:</strong> Can adapt online by replanning the latent variable based on new observations</li>
+        <li><strong>Interpretability:</strong> The latent space provides interpretable dimensions of trajectory variation</li>
+    </ul>
+  </div>
+  </section>
+
+<!-- Classical Variational Bayes Section -->
+<section class="section">
+<h2 class="section-title">📊 Classical Variational Bayes</h2>
+
+<div class="text-content">
+  LAP is trained using the classical variational Bayes framework, which provides a principled approach to learning both the generative model and approximate posterior over latent variables.
+</div>
+
+<div class="subsection-title">Evidence Lower Bound (ELBO)</div>
+<div class="equation-box">
+  $$\mathcal{L}(\theta, \mu, \sigma) = \mathbb{E}_{q(z|x)}[\log p_\theta(x|z)] - D_{KL}(q(z|x) \| p(z))$$
+  <br>
+  where $q(z|x) = \mathcal{N}(\mu, \sigma^2)$ with diagonal covariance
+</div>
+
+<div class="text-content">
+  The ELBO objective consists of two terms: a <strong>reconstruction term</strong> that encourages the model to explain observed trajectories, and a <strong>KL divergence term</strong> that regularizes the posterior to remain close to the prior.
+</div>
+
+<div class="subsection-title">Two-Stage Optimization</div>
+<div class="text-content">
+  Unlike Variational Autoencoders (VAEs) that use amortized inference with an encoder network, LAP employs <strong>direct optimization</strong> of latent variables:
+</div>
+
+<div class="two-column" style="margin: 2rem 0;">
+  <div class="feature-card">
+      <h3>Local Optimization (Fast Learning)</h3>
+      <ul style="line-height: 1.8;">
+          <li>Optimize $(\mu_i, \sigma_i)$ for each trajectory $i$</li>
+          <li>16 gradient ascent steps on the ELBO</li>
+          <li>Adapts latent plans to specific demonstrations</li>
+          <li>Achieves more precise trajectory-specific representations</li>
+      </ul>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Global Optimization (Slow Learning)</h3>
+      <ul style="line-height: 1.8;">
+          <li>Update shared decoder parameters $\theta$</li>
+          <li>Performed after all local optimizations</li>
+          <li>Learns general patterns across all demonstrations</li>
+          <li>Builds a universal trajectory generator</li>
+      </ul>
+  </div>
+</div>
+
+<div class="highlight">
+  <h3 style="color: #2774AE; margin-top: 0;">Why Not VAE?</h3>
+  <p style="line-height: 1.8;">
+      Standard VAEs use an encoder network $q_\phi(z|x)$ for amortized inference, which approximates the posterior in a single forward pass. However, this can lead to less precise latent representations, especially for complex trajectories. LAP's direct optimization approach achieves <strong>more accurate posterior inference</strong> for each trajectory by dedicating multiple gradient steps to finding the optimal latent representation, at the cost of additional computation during training.
+  </p>
+</div>
+
+<div class="text-content" style="margin-top: 2rem;">
+  This two-stage optimization mirrors biological learning systems with complementary fast and slow learning rates, similar to the hippocampus-neocortex system in the brain.
+</div>
+</section>
+
+<!-- Variational Replanning Section -->
+<section class="section">
+<h2 class="section-title">🔄 Variational Replanning</h2>
+
+<div class="text-content">
+  At test time, LAP performs <strong>variational replanning</strong> to continuously adapt the latent plan based on newly observed trajectory segments. This enables real-time adaptation to unexpected box trajectories or environmental changes.
+</div>
+
+<div class="subsection-title">Bayesian Posterior Update</div>
+<div class="equation-box" style="text-align: center;">
+  $$q(z | x_{0:t+\Delta}) \propto q(z | x_{0:t}) \cdot p(x_{t+1:t+\Delta} | x_{0:t}, z)$$
+</div>
+
+<div class="text-content">
+  The posterior update follows Bayes' rule: the new posterior is proportional to the previous posterior (prior belief) multiplied by the likelihood of the newly observed trajectory segment. This formulation naturally balances stability and adaptability.
+</div>
+
+<div class="subsection-title">Optimization Objective</div>
+<div class="equation-box">
+  $$\max_{\mu,\sigma} \mathbb{E}_{q_{t+\Delta}}[\log p_\theta(x_{t+1:t+\Delta} | x_{0:t}, z)] - D_{KL}(q_{t+\Delta} \| q_t)$$
+</div>
+
+<div class="features-grid">
+  <div class="feature-card">
+      <h3>Likelihood Term</h3>
+      <p>Encourages the updated latent plan to explain the newly observed trajectory segment $x_{t+1:t+\Delta}$, improving prediction accuracy</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>KL Regularization</h3>
+      <p>Acts as a trust region constraint, preventing drastic changes to the latent plan and ensuring smooth adaptation</p>
+  </div>
+</div>
+
+<div class="subsection-title">Efficient Real-Time Implementation</div>
+<div class="two-column" style="margin: 2rem 0;">
+  <div class="feature-card">
+      <h3>Update Frequency</h3>
+      <ul style="line-height: 1.8;">
+          <li><strong>Latent Replanning:</strong> 30Hz (every 33ms)</li>
+          <li><strong>Action Generation:</strong> 100Hz (every 10ms)</li>
+          <li><strong>Replanning Horizon:</strong> $\Delta = 10$ timesteps</li>
+      </ul>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Optimization Efficiency</h3>
+      <ul style="line-height: 1.8;">
+          <li><strong>Single Gradient Step:</strong> Fast update compared to 16 steps during training</li>
+          <li><strong>Warm Start:</strong> Initialize from previous posterior</li>
+          <li><strong>GPU Acceleration:</strong> Parallel batch processing</li>
+      </ul>
+  </div>
+</div>
+
+<div class="highlight">
+  <h3 style="color: #2774AE; margin-top: 0;">The Role of KL Divergence</h3>
+  <p style="line-height: 1.8;">
+      The $D_{KL}(q_{t+\Delta} \| q_t)$ term is crucial for stable real-time adaptation. Without it, the latent plan could change drastically between updates, leading to jerky or inconsistent robot motions. The KL term enforces <strong>incremental adaptation</strong>, where the new plan remains close to the previous plan while gradually incorporating new information. This mirrors how humans smoothly adjust their catching strategy as they observe the ball's trajectory, rather than abruptly changing their motion plan.
+  </p>
+</div>
+
+<div class="text-content" style="margin-top: 2rem;">
+  This variational replanning framework enables LAP to achieve the responsiveness of reactive controllers while maintaining the smoothness and foresight of trajectory optimization methods.
+</div>
+</section>
+
+<!-- Experimental Results Section -->
+<section class="section">
+<h2 class="section-title">🧪 Experimental Results</h2>
+
+<div class="text-content">
+  We evaluate LAP on box catching tasks across two different robot platforms, comparing against three baseline methods: model-based control, behavior cloning (BC), and diffusion policy. Our experiments demonstrate LAP's superior performance across multiple metrics.
+</div>
+
+<div class="subsection-title">Quantitative Results</div>
+<div class="text-content">
+  We evaluate all methods across four key metrics: success rate, energy consumption, motion smoothness, and adaptability to novel trajectories.
+</div>
+
+<div class="subsection-title">Comparative Videos</div>
+<div class="text-content" style="margin-bottom: 1rem;">
+  Watch how each method performs on the box catching task. Notice the differences in motion smoothness, energy efficiency, and adaptability.
+</div>
+
+<div class="experiments-section">
+  <!-- LAP (Ours) -->
+  <div class="method-section">
+      <div class="method-header lap">LAP (Ours)</div>
+      <div class="videos-grid">
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/lap-robot-A-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/lap-robot-A-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/lap-robot-A-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 3</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/lap-robot-B-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/lap-robot-B-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/lap-robot-B-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 3</div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Model-Based -->
+  <div class="method-section">
+      <div class="method-header model-based">Model-Based</div>
+      <div class="videos-grid">
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/mbp-robot-A-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/mbp-robot-A-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/mbp-robot-A-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 3</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/mbp-robot-B-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/mbp-robot-B-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/mbp-robot-B-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 3</div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Behavior Cloning -->
+  <div class="method-section">
+      <div class="method-header bc">Behavior Cloning</div>
+      <div class="videos-grid">
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/bc-robot-A-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/bc-robot-A-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/bc-robot-A-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 3</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/bc-robot-B-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/bc-robot-B-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/bc-robot-B-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 3</div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Diffusion Policy -->
+  <div class="method-section">
+      <div class="method-header diffusion">Diffusion Policy</div>
+      <div class="videos-grid">
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/df-robot-A-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/df-robot-A-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/df-robot-A-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot A - Box 3</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/df-robot-B-box-1.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 1</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/df-robot-B-box-2.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 2</div>
+          </div>
+          <div class="video-item">
+              <div class="video-container">
+                  <video controls autoplay muted loop>
+                      <source src="videos/df-robot-B-box-3.mp4" type="video/mp4">
+                  </video>
+              </div>
+              <div class="video-caption">Robot B - Box 3</div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="results-table">
+  <table>
+      <thead>
+          <tr>
+              <th colspan="5">Robot A Performance</th>
+          </tr>
+          <tr>
+              <th>Method</th>
+              <th>Success Rate</th>
+              <th>Energy (J)</th>
+              <th>Smoothness</th>
+              <th>Adaptability</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><strong>Model-based</strong></td>
+              <td class="best-result">30/30</td>
+              <td>74.99</td>
+              <td>Medium</td>
+              <td>Low</td>
+          </tr>
+          <tr>
+              <td><strong>BC</strong></td>
+              <td>26/30</td>
+              <td>31.39</td>
+              <td>Low</td>
+              <td>Low</td>
+          </tr>
+          <tr>
+              <td><strong>Diffusion</strong></td>
+              <td>20/30</td>
+              <td>42.53</td>
+              <td>Medium</td>
+              <td>Medium</td>
+          </tr>
+          <tr>
+              <td><strong>LAP (Ours)</strong></td>
+              <td class="best-result">29/30</td>
+              <td class="best-result">11.47</td>
+              <td class="best-result">High</td>
+              <td class="best-result">High</td>
+          </tr>
+      </tbody>
+  </table>
+  
+  <table style="margin-top: 1rem;">
+      <thead>
+          <tr>
+              <th colspan="5">Robot B Performance</th>
+          </tr>
+          <tr>
+              <th>Method</th>
+              <th>Success Rate</th>
+              <th>Energy (J)</th>
+              <th>Smoothness</th>
+              <th>Adaptability</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><strong>Model-based</strong></td>
+              <td class="best-result">30/30</td>
+              <td>33.12</td>
+              <td>Medium</td>
+              <td>Low</td>
+          </tr>
+          <tr>
+              <td><strong>BC</strong></td>
+              <td>27/30</td>
+              <td>15.82</td>
+              <td>Low</td>
+              <td>Low</td>
+          </tr>
+          <tr>
+              <td><strong>Diffusion</strong></td>
+              <td>24/30</td>
+              <td>21.32</td>
+              <td>Medium</td>
+              <td>Medium</td>
+          </tr>
+          <tr>
+              <td><strong>LAP (Ours)</strong></td>
+              <td class="best-result">30/30</td>
+              <td class="best-result">7.14</td>
+              <td class="best-result">High</td>
+              <td class="best-result">High</td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+
+<div class="subsection-title">Key Findings</div>
+<div class="features-grid" style="grid-template-columns: repeat(2, 1fr);">
+  <div class="feature-card">
+      <h3>Model-Based Control</h3>
+      <p><strong>Very stable performance with the highest success rates.</strong> However, not energy-efficient, consuming 5-6.5× more energy than LAP while achieving similar success rates.</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Behavior Cloning</h3>
+      <p><strong>Failed to properly learn arm-raising timing and impact-reducing retreat motions</strong> despite showing moderate success rates due to task simplicity. Produces jerky, locally-optimal motions.</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>Diffusion Policy</h3>
+      <p><strong>Only learned final pose with fine success rates despite task simplicity,</strong> with highly noisy execution. Shows moderate adaptation but inconsistent performance.</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>🎯 Latent Adaptive Planner</h3>
+      <p><strong>Successfully learned box-catching timing and impact-mitigating retreat motions</strong> while achieving high success rates with significantly lower energy usage than the model-based planner.</p>
+  </div>
+</div>
+
+</section>
+
+<!-- Robot Platforms Section -->
+<section class="section">
+<h2 class="section-title">Cross-Platform Transfer: Two Robot Embodiments</h2>
+
+<div class="two-column">
+  <div class="image-figure">
+      <img src="images/robot_a.png" alt="Robot A">
+      <div class="image-caption">Robot A Platform</div>
+  </div>
+  <div class="image-figure">
+      <img src="images/robot_b.png" alt="Robot B">
+      <div class="image-caption">Robot B Platform</div>
+  </div>
+</div>
+
+<div class="text-content">
+  We validated LAP on two robot platforms with different kinematic structures and dynamics. This cross-platform evaluation demonstrates the generalizability of our approach and the effectiveness of the model-based data regeneration pipeline in handling embodiment differences.
+</div>
+</section>
+
+<!-- Conclusion Section -->
+<section class="section">
+<h2 class="section-title">✨ Conclusion</h2>
+
+<div class="text-content">
+  We presented Latent Adaptive Planner (LAP), a novel approach to dynamic manipulation that combines trajectory-level latent variable modeling with real-time variational replanning. Through extensive experiments on box catching tasks, we demonstrated that LAP achieves:
+</div>
+
+<div class="features-grid" style="margin: 2rem 0; grid-template-columns: repeat(2, 1fr);">
+  <div class="feature-card">
+      <h3>🎓 Efficient Learning</h3>
+      <p>Learns from human demonstrations through model-based data regeneration</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>⚡ Energy Efficiency</h3>
+      <p>5-6.5× reduction in energy consumption vs. model-based control</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>🎯 High Performance</h3>
+      <p>98-100% success rate with smooth, human-like motions</p>
+  </div>
+  
+  <div class="feature-card">
+      <h3>🔄 Real-Time Adaptation</h3>
+      <p>Continuous replanning at 30Hz for robust generalization</p>
+  </div>
+</div>
+
+<div class="text-content">
+  The key insight of LAP is that explicit latent variable modeling enables efficient representation of trajectory-level intentions, while variational replanning provides a principled framework for real-time adaptation. This combination opens new possibilities for learning-based dynamic manipulation in unstructured environments.
+</div>
+</section>
+
+<!-- Citation Section -->
+<section class="section">
+<h2 class="section-title">📝 Citation</h2>
+
+<div class="citation">
+  <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+  <pre id="bibtex">@inproceedings{noh2025latent,
+title = {Latent Adaptive Planner for Dynamic Manipulation},
+author = {Noh, Donghun and Kong, Deqian and Zhao, Minglu and Lizarraga, Andrew and Xie, Jianwen and Wu, Ying Nian and Hong, Dennis},
+booktitle = {Proceedings of the Conference on Robot Learning (CoRL)},
+year = {2025}
+}</pre>
+</div>
+</section>
+
+</main>
+</div>
+
+<script>
+function copyBibtex() {
+const bibtex = document.getElementById('bibtex').textContent;
+navigator.clipboard.writeText(bibtex).then(function() {
+const btn = document.querySelector('.copy-btn');
+const originalText = btn.textContent;
+btn.textContent = 'Copied!';
+btn.style.background = '#28a745';
+setTimeout(() => {
+  btn.textContent = originalText;
+  btn.style.background = '#2774AE';
+}, 2000);
+});
+}
+
+// Add smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+  target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+  });
+}
+});
+});
+</script>
 </body>
 </html>
